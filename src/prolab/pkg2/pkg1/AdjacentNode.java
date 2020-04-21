@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class AdjacentNode {
     private String name;
     private long distance;
+    private long ShortestPathDistance;
 
     public AdjacentNode() {
        this.name=null;
@@ -28,7 +29,7 @@ public class AdjacentNode {
  
     private ArrayList<String> shortestPath = new ArrayList<String>();
      
-
+    
     /**
      * @return the name
      */
@@ -70,5 +71,19 @@ public class AdjacentNode {
      */
     public void setShortestPath(ArrayList<String> shortestPath) {
         this.shortestPath = shortestPath;
+    }
+
+    /**
+     * @return the ShortestPathDistance
+     */
+    public long getShortestPathDistance() {
+        return ShortestPathDistance;
+    }
+
+    /**
+     * @param ShortestPathDistance the ShortestPathDistance to set
+     */
+    public void setShortestPathDistance(long ShortestPathDistance) {
+        this.ShortestPathDistance = ShortestPathDistance;
     }
 }
