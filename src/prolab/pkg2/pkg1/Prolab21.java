@@ -41,7 +41,7 @@ public class Prolab21 {
                 System.out.print(adjacentNode.getName() + "--" + adjacentNode.getDistance() + "--" + "shortest path : ");
                 for (String pathName : adjacentNode.getShortestPath()) {
                     System.out.print(pathName+ "-");
-                }System.out.print(adjacentNode.getName());
+                }
                 System.out.print("---->");
             }
 
@@ -53,7 +53,7 @@ public class Prolab21 {
             System.out.println("");
         }
 
-        
+        System.out.println(allPairShortestPath.INF);
         
         TreeMap<Long, ArrayList<String>> resultSet = allPairShortestPath.findShortestPaths(cityArrayList, "kocaeli","ankara","izmir","antalya","sanliurfa","van", "denizli","bursa","edirne","rize");
         for (Map.Entry<Long, ArrayList<String>> entrySet : resultSet.entrySet()) {
