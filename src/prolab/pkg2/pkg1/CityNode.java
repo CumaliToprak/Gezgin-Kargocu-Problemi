@@ -19,54 +19,28 @@ public class CityNode {
      //this is for the adjecent list for the all the city that are in the graph.
      private ArrayList<AdjacentNode> adjacentList = new ArrayList<AdjacentNode>();
      
-    
-    /**
-     * @return the licensePlate
-     */
     public int getLicensePlate() {
         return licensePlate;
     }
 
-    /**
-     * @param licensePlate the licensePlate to set
-     */
     public void setLicensePlate(int licensePlate) {
         this.licensePlate = licensePlate;
     }
 
-  
-
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the adjacentList
-     */
     public ArrayList<AdjacentNode> getAdjacentList() {
         return adjacentList;
     }
 
-    /**
-     * @param adjacentList the adjacentList to set
-     */
     public void setAdjacentList(ArrayList<AdjacentNode> adjacentList) {
         this.adjacentList = adjacentList;
     }
-
-    /**
-     * @param adjacentList the adjacentList to set
-     */
-   
 
 }
