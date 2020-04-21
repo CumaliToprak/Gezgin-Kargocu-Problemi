@@ -81,20 +81,20 @@ public class AllPairShortestPath {
         int i;
         int startPoint; //basladığımız yere geri dönmek icin.
 
-        startPoint = findCityPlateNumber(cityArrayList, path[0]);
-
-        for (i = 1; i < path.length; i++) {
+        startPoint = findCityPlateNumber(cityArrayList, path[0]); //başladığımız yerin plaka numarasını saklarız
+                                                                  //baslangıc ve bitisi permutasyon methoduna göndermeye gerek yok.
+        for (i = 1; i < path.length; i++) {   //indexler üzerinden arama yapacagımız icin plakaları cekiyoruz.
             plateNumbers[i - 1] = findCityPlateNumber(cityArrayList, path[i]);
         }
 
         Permutation permutation = new Permutation();
         List<List<Integer>> resultSet = permutation.permute(plateNumbers);
-        for (List<Integer> list : resultSet) {
+        for (List<Integer> list : resultSet) {  //her result set'e baslangıc ve bitis noktaları ekledik.
             list.add(0, startPoint);
             list.add(startPoint);
         }
 
-        TreeMap<Long, ArrayList<String>> shortestFiveRoute = new TreeMap<>();
+        TreeMap<Long, ArrayList<String>> shortestFiveRoute = new TreeMap<>();// Tree map ascending sıralama yaptığı için bunu kullandık.
         for (i = 0; i < resultSet.size(); i++) {
             List<Integer> result = resultSet.get(i); //sıra ile tüm seçimleri deniycez.
             int sourceCity = result.get(0);
@@ -103,7 +103,7 @@ public class AllPairShortestPath {
             long totalDistance = 0;
             ArrayList<String> route = new ArrayList<>();
 
-            while (counter < cityNumber) {
+            while (counter < cityNumber) { //tüm sehirleri sıra ile gezeriz.
                 totalDistance += cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getDistance();
                 route.addAll(cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath());
                 sourceCity = nextCity;
@@ -111,7 +111,7 @@ public class AllPairShortestPath {
                 counter++;
             }
             route.add(cityArrayList.get(sourceCity - 1).getName());
-
+            //Burada en kısa 5 gğzergahı hesaplatıyoruz.
             if (shortestFiveRoute.size() >= 10) {
                 shortestFiveRoute.put(totalDistance, route);
                 shortestFiveRoute.remove(shortestFiveRoute.lastKey());
@@ -121,9 +121,9 @@ public class AllPairShortestPath {
 
         }
 
-        return shortestFiveRoute;
+        return shortestFiveRoute; //bulduğumuz sonuçları  dönüyoruz.
     }
-
+    //Gönderdiğimiz şehirlerin plakalarını dönderir.
     public int findCityPlateNumber(ArrayList<CityNode> cityArrayList, String city) {
         for (CityNode cityItem : cityArrayList) {
             if (cityItem.getName().equalsIgnoreCase(city)) {
@@ -135,5 +135,4 @@ public class AllPairShortestPath {
 
 }
 
-// Contributed by Aakash Hasija 
 
