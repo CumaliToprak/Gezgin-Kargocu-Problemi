@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,16 +24,13 @@ public class Prolab21 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         // file reading and storing in the ArrayList
-        FileUtility fileObj = new FileUtility();
+        FileUtility fileObj = new FileUtility();  //file okuma islemi.
         ArrayList<CityNode> cityArrayList = fileObj.readFile();
 
-//        for (int i = 0; i < 10; i++) {
-//            System.out.println("");
-//        }
 
-        AllPairShortestPath allPairShortestPath = new AllPairShortestPath();
+        AllPairShortestPath allPairShortestPath = new AllPairShortestPath(); //algoritmamızı calıştıryoruz.
         allPairShortestPath.floydWarshall(cityArrayList);
 
 
@@ -55,8 +54,10 @@ public class Prolab21 {
 
         System.out.println(allPairShortestPath.INF);
         
-        TreeMap<Long, ArrayList<String>> resultSet = allPairShortestPath.findShortestPaths(cityArrayList, "kocaeli","ankara","izmir","antalya","sanliurfa","van", "denizli","bursa","edirne","rize");
-        for (Map.Entry<Long, ArrayList<String>> entrySet : resultSet.entrySet()) {
+        TreeMap<Long, ArrayList<String>> resultSet;
+        try {
+            resultSet = allPairShortestPath.findShortestPaths(cityArrayList, "kocaeli","ankara","izmir","antalya","sanliurfa","van", "denizli","bursa","edirne","rize");
+            for (Map.Entry<Long, ArrayList<String>> entrySet : resultSet.entrySet()) {
             Long key = entrySet.getKey();
             ArrayList<String> value = entrySet.getValue();
             for (String city : value) {
@@ -64,12 +65,12 @@ public class Prolab21 {
             }System.out.println(" ---> "+key);
             
         }
+        } catch (RequiredDataNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
         
         
-        System.out.println("");
-        
-        System.out.println(cityArrayList.get(33).getAdjacentList().get(62).getShortestPath() + " : "+cityArrayList.get(33).getAdjacentList().get(62).getShortestPathDistance());
-
+     
     }
 
     

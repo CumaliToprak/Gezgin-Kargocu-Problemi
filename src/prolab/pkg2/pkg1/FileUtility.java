@@ -24,7 +24,7 @@ public class FileUtility {
     public ArrayList<CityNode> readFile() {
         ArrayList<CityNode> cityArrayList = new ArrayList<CityNode>();
         int i;
-        try {
+        try {  //öncelikli listemize sadece city bilgilerini ekleriz. Komşuları daha sonra ekledik.
             File myObj = new File("/home/cumali_toprak/Desktop/Prolab Projeleri/Prolab-2.1/sehirlerVeMesafeler.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
@@ -39,7 +39,8 @@ public class FileUtility {
 
                 }
             }
-
+            //Burda tekrardan dosyayı okumamızın sebebi komşuları eklerken city bilgilerinin daha önceden listeye eklenmiş olması gerekir.
+            //çünkü bu city bilgilerinden gerekli plaka numaralarını komşulara atamamız gerekir.
             int counter = 0;
             Scanner myReader2 = new Scanner(myObj);
             while (myReader2.hasNextLine()) {
@@ -72,13 +73,14 @@ public class FileUtility {
 
             myReader.close();
         } catch (FileNotFoundException exception) {
-            System.out.println("An error occurred.");
-            exception.printStackTrace();
+            System.out.println("Dosyada sorun var! Kontrol ediniz. ---->  " + exception);
+            System.exit(0);
         }
 
         return cityArrayList;
     }
 
+    //İlgili komşuya ait plaka degerini city listesinden getirir.
     int findAdjacentIndex(String adjacentName, ArrayList<CityNode> cityArrayList) {
         for (CityNode city : cityArrayList) {
             if (city.getName().toLowerCase().equalsIgnoreCase(adjacentName)) {
@@ -88,20 +90,4 @@ public class FileUtility {
         return -1;
     }
 
-    //Bunu başlangıçta dosya formatını düzeltmek için kullandık artık kullanmayacağız.
-//    public void writeFile()
-//            throws IOException {
-//        for (String str : arrLine) {
-//
-//            String textToAppend = str;
-//
-//            BufferedWriter writer = new BufferedWriter(
-//                    new FileWriter("/home/cumali_toprak/Desktop/calismalar/java/Prolab-2.1/sampleFile.txt", true) //Set true for append mode
-//            );
-//            writer.newLine();   //Add new line
-//            writer.write(textToAppend);
-//            writer.close();
-//        }
-//
-//    }
 }

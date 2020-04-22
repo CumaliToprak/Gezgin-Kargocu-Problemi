@@ -73,8 +73,9 @@ public class AllPairShortestPath {
         }
         return 1;
     }
-       //Bu metod bize istenilen güzergaha göre en kısa yolları bulur.
-    TreeMap<Long, ArrayList<String>> findShortestPaths(ArrayList<CityNode> cityArrayList, String... path) {
+
+    //Bu metod bize istenilen güzergaha göre en kısa yolları bulur.
+    TreeMap<Long, ArrayList<String>> findShortestPaths(ArrayList<CityNode> cityArrayList, String... path) throws RequiredDataNotFoundException {
 
         int cityNumber = path.length;
         int[] plateNumbers = new int[cityNumber - 1];
@@ -82,8 +83,9 @@ public class AllPairShortestPath {
         int startPoint; //basladığımız yere geri dönmek icin.
 
         startPoint = findCityPlateNumber(cityArrayList, path[0]); //başladığımız yerin plaka numarasını saklarız
-                                                                  //baslangıc ve bitisi permutasyon methoduna göndermeye gerek yok.
-        for (i = 1; i < path.length; i++) {   //indexler üzerinden arama yapacagımız icin plakaları cekiyoruz.
+
+        //baslangıc ve bitisi permutasyon methoduna göndermeye gerek yok.
+        for (i = 1; i < path.length; i++) {     //indexler üzerinden arama yapacagımız icin plakaları cekiyoruz.
             plateNumbers[i - 1] = findCityPlateNumber(cityArrayList, path[i]);
         }
 
@@ -121,18 +123,17 @@ public class AllPairShortestPath {
 
         }
 
-        return shortestFiveRoute; //bulduğumuz sonuçları  dönüyoruz.
+        return shortestFiveRoute;  //bulduğumuz sonuçları  dönüyoruz.
     }
+
     //Gönderdiğimiz şehirlerin plakalarını dönderir.
-    public int findCityPlateNumber(ArrayList<CityNode> cityArrayList, String city) {
+    public int findCityPlateNumber(ArrayList<CityNode> cityArrayList, String city) throws RequiredDataNotFoundException {
         for (CityNode cityItem : cityArrayList) {
             if (cityItem.getName().equalsIgnoreCase(city)) {
                 return cityItem.getLicensePlate();
             }
         }
-        return -1;
+        throw new RequiredDataNotFoundException(city + " için plaka numarası bulunamadı!");
     }
 
 }
-
-

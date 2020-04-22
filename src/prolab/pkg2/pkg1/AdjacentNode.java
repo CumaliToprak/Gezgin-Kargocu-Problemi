@@ -30,59 +30,34 @@ public class AdjacentNode {
     private ArrayList<String> shortestPath = new ArrayList<String>();
      
     
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */    
-    
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the distance
-     */
     public long getDistance() {
         return distance;
     }
 
-    /**
-     * @param distance the distance to set
-     */
     public void setDistance(long distance) {
         this.distance = distance;
     }
 
-    /**
-     * @return the shortestPath
-     */
     public ArrayList<String> getShortestPath() {
         return shortestPath;
     }
 
-    /**
-     * @param shortestPath the shortestPath to set
-     */
     public void setShortestPath(ArrayList<String> shortestPath) {
         this.shortestPath = shortestPath;
     }
 
-    /**
-     * @return the ShortestPathDistance
-     */
     public long getShortestPathDistance() {
         return ShortestPathDistance;
     }
 
-    /**
-     * @param ShortestPathDistance the ShortestPathDistance to set
-     */
     public void setShortestPathDistance(long ShortestPathDistance) {
         this.ShortestPathDistance = ShortestPathDistance;
     }
