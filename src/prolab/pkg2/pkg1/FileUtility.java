@@ -11,9 +11,14 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  *
@@ -88,6 +93,23 @@ public class FileUtility {
             }
         }
         return -1;
+    }
+
+    public void writeFie(TreeMap<Long, ArrayList<String>> shortestPaths) {
+
+        try {
+            Files.write(Paths.get("/home/cumali_toprak/Desktop/Prolab Projeleri/Prolab-2.1/output.txt"), ("").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            for (Map.Entry<Long, ArrayList<String>> en : shortestPaths.entrySet()) {
+                Long key = en.getKey();
+                ArrayList<String> val = en.getValue();
+                Files.write(Paths.get("/home/cumali_toprak/Desktop/Prolab Projeleri/Prolab-2.1/output.txt"), (val + "--->" + key + "\n\n").getBytes(), StandardOpenOption.APPEND);
+            }
+
+        } catch (IOException e) {
+            System.out.println("output.txt dosyasi acilamadi : " + e.getMessage());
+        }
+        
+        System.exit(0);
     }
 
 }
