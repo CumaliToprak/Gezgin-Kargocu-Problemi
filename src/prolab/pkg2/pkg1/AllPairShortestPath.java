@@ -106,15 +106,22 @@ public class AllPairShortestPath {
             ArrayList<String> route = new ArrayList<>();
 
             while (counter < cityNumber) { //tüm sehirleri sıra ile gezeriz.
-                totalDistance += cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getDistance();
-                route.addAll(cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath());
+                      totalDistance += cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getDistance();
+                if(counter>0)
+                {   ArrayList<String> tempList = cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath();
+                    route.addAll(tempList.subList(1, tempList.size()));
+                }else
+                {
+                    route.addAll(cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath());
+                }
+                
                 sourceCity = nextCity;
                 nextCity = result.get(result.indexOf(sourceCity) + 1);
                 counter++;
             }
-            route.add(cityArrayList.get(sourceCity - 1).getName());
+           
             //Burada en kısa 5 gğzergahı hesaplatıyoruz.
-            if (shortestFiveRoute.size() >= 10) {
+            if (shortestFiveRoute.size() >= 5) {
                 shortestFiveRoute.put(totalDistance, route);
                 shortestFiveRoute.remove(shortestFiveRoute.lastKey());
             } else {
