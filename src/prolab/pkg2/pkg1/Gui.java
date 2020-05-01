@@ -35,6 +35,7 @@ public class Gui extends javax.swing.JFrame {
     public void mainProcesses() {
         FileUtility fileObj = new FileUtility();  //file okuma islemi.
         cityArrayList = fileObj.readFile();
+        
 
         allPairShortestPath = new AllPairShortestPath(); //algoritmamızı calıştıryoruz.
         allPairShortestPath.floydWarshall(cityArrayList);
@@ -188,7 +189,7 @@ public class Gui extends javax.swing.JFrame {
                 resultSet = allPairShortestPath.findShortestPaths(cityArrayList, selectedCities);
 
                 FileUtility fileUtility = new FileUtility();
-                fileUtility.writeFie(resultSet);
+                fileUtility.writeFile(resultSet);
 
             } catch (RequiredDataNotFoundException ex) {
                 System.out.println(ex.getMessage());

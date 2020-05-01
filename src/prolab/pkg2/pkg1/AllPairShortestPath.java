@@ -24,13 +24,15 @@ public class AllPairShortestPath {
 
     final static int INF = Integer.MAX_VALUE, V = 81;
 
-    void floydWarshall(ArrayList<CityNode> cityArrayList) {
+    public void floydWarshall(ArrayList<CityNode> cityArrayList) {
         long dist[][] = new long[V][V];
         int i, j, k;
 
         for (i = 0; i < 81; i++) {   //Her city icin komsulara giden degerleri diziye atadık.
             for (j = 0; j < 81; j++) {
+
                 dist[i][j] = cityArrayList.get(i).getAdjacentList().get(j).getDistance();
+
             }
         }
 
@@ -75,7 +77,9 @@ public class AllPairShortestPath {
     }
 
     //Bu metod bize istenilen güzergaha göre en kısa yolları bulur.
-    TreeMap<Long, ArrayList<String>> findShortestPaths(ArrayList<CityNode> cityArrayList, String... path) throws RequiredDataNotFoundException {
+    public void findShortestPaths(ArrayList<CityNode> cityArrayList, String[] path,
+            ArrayList<ArrayList<Integer>> koordinatlarX,
+            ArrayList<ArrayList<Integer>> koordinatlarY) throws RequiredDataNotFoundException {
 
         int cityNumber = path.length;
         int[] plateNumbers = new int[cityNumber - 1];
@@ -106,21 +110,20 @@ public class AllPairShortestPath {
             ArrayList<String> route = new ArrayList<>();
 
             while (counter < cityNumber) { //tüm sehirleri sıra ile gezeriz.
-                      totalDistance += cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getDistance();
-                if(counter>0)
-                {   ArrayList<String> tempList = cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath();
+                totalDistance += cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getDistance();
+                if (counter > 0) {
+                    ArrayList<String> tempList = cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath();
                     route.addAll(tempList.subList(1, tempList.size()));
-                }else
-                {
+                } else {
                     route.addAll(cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getShortestPath());
                 }
-                
+
                 sourceCity = nextCity;
                 nextCity = result.get(result.indexOf(sourceCity) + 1);
                 counter++;
             }
-           
-            //Burada en kısa 5 gğzergahı hesaplatıyoruz.
+
+            //Burada en kısa 5 güzergahı hesaplatıyoruz.
             if (shortestFiveRoute.size() >= 5) {
                 shortestFiveRoute.put(totalDistance, route);
                 shortestFiveRoute.remove(shortestFiveRoute.lastKey());
@@ -130,7 +133,8 @@ public class AllPairShortestPath {
 
         }
 
-        return shortestFiveRoute;  //bulduğumuz sonuçları  dönüyoruz.
+        FileUtility fileUtility = new FileUtility();
+        fileUtility.writeFile(shortestFiveRoute); // en kisa yollar yaziliyor.
     }
 
     //Gönderdiğimiz şehirlerin plakalarını dönderir.
