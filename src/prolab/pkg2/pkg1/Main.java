@@ -71,7 +71,7 @@ public class Main extends Application {
         statusText.setFont(Font.font(15));
         statusAnlikText.setFont(Font.font(23));
         Button islemButton = new Button("Hesapla");
-        Button haritaCizdirButton = new Button("Haritayi çizdir.");
+        Button haritaCizdirButton    = new Button("Haritayi çizdir.");
         informationText.setFont(Font.font(16));
 
         FileInputStream fileInput = null;

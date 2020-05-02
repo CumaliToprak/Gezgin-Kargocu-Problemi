@@ -19,7 +19,7 @@
 19,CORUM,709,192,Yozgat=108,Amasya=92,Samsun=172,Sinop=266,Kastamonu=197,Cankiri=156,Kirikkale=166,
 20,DENIZLI,252,455,Mugla=145,Burdur=150,Afyonkarahisar=222,Usak=150,Manisa=208,Aydin=126,
 21,DIYARBAKIR,1120,437,Sanliurfa=176,Mardin=96,Batman=100,Mus=252,Bingol=141,Elazig=153,Malatya=249,Adiyaman=207,
-22,EDIRNE,92,58,Canakkale=216,Tekirdag=140,Kirikkale=761,
+22,EDIRNE,92,58,Canakkale=216,Tekirdag=140,Kirklareli=62,
 23,ELAZIG,1039,367,Diyarbakir=153,Bingol=144,Tunceli=136,Erzincan=267,Malatya=98,
 24,ERZINCAN,1056,259,Elazig=267,Tunceli=131,Bingol=275,Erzurum=190,Bayburt=155,Gumushane=133,Giresun=295,Sivas=248,Malatya=363,
 25,ERZURUM,1187,232,Bingol=177,Mus=266,Agri=183,Kars=203,Ardahan=233,Artvin=226,Rize=259,Bayburt=125,Erzincan=190,
