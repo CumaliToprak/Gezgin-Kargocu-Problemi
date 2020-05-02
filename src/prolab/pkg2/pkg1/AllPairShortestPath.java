@@ -1,25 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package prolab.pkg2.pkg1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 
-/**
- *
- * @author cumali_toprak
- */
 public class AllPairShortestPath {
 
     private static ArrayList<CityNode> cityArrayList;
@@ -189,4 +175,5 @@ public class AllPairShortestPath {
         throw new RequiredDataNotFoundException(city + " için plaka numarası bulunamadı!");
     }
 
+   
 }

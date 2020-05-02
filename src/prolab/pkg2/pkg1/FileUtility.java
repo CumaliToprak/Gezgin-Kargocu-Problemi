@@ -1,31 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package prolab.pkg2.pkg1;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-/**
- *
- * @author cumali_toprak
- */
 public class FileUtility {
 
     public static ArrayList<CityNode> readFile() {
@@ -43,7 +29,7 @@ public class FileUtility {
                 cityObj.setX(Integer.parseInt(wordArr[2]));
                 cityObj.setY(Integer.parseInt(wordArr[3]));
                 cityArrayList.add(cityObj);
-               
+
             }
 
         } catch (FileNotFoundException ex) {
@@ -101,21 +87,38 @@ public class FileUtility {
 
     public static void writeFile(TreeMap<Long, ArrayList<String>> shortestPaths) {
 
-        String temp ="";
+        String temp = "";
         for (Map.Entry<Long, ArrayList<String>> en : shortestPaths.entrySet()) {
-                Long key = en.getKey();
-                ArrayList<String> val = en.getValue();
-                temp += val + "--->" + key + "\n\n";
-            }
+            Long key = en.getKey();
+            ArrayList<String> val = en.getValue();
+            temp += val + "--->" + key + "\n\n";
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
-            
+
             writer.write(temp);
 
         } catch (IOException ex) {
             System.out.println("write fonksiyonunda dosya açılırken hata oldu.");
         }
 
-        
+    }
+
+    public static int dosyadanCozunurluguOku() {
+        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader("cozunurlukAyar.txt")))) {
+
+            while (scanner.hasNextLine()) {
+                 String data = scanner.nextLine();
+                 if(data.equalsIgnoreCase("hd".trim())){
+                     return 0;
+                 }
+            
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("Cozunurluk ayari dosyasi okunamadi...");
+            System.exit(0);
+        }
+        return 1;
     }
 
 }

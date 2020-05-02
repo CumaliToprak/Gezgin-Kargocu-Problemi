@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package prolab.pkg2.pkg1;
 
 import javafx.scene.control.TextField;
@@ -31,10 +27,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- *
- * @author BerkayEfe
- */
 public class Main extends Application {
 
     private String baslangicSehri;
@@ -44,13 +36,22 @@ public class Main extends Application {
     public static Group group = new Group();
     private static final double arrowLength = 7;
     private static final double arrowWidth = 7;
+    private static float FullHDWitdh = 1499;
+    private static float FullHDHeight = 797;
+    private static final float HDWitdh = 1140;
+    private static final float HDHeight = 607;
+    private static int cozunurlukGenislik;
+    private static int cozunurlukYukseklik;
+    private static float oranX;
+    private static float oranY;
+    
     private static Text statusAnlikText;
 
     @Override
     public void start(Stage stage) {
         AllPairShortestPath.floydWarshall(); // tum sehirler arasi uzakliklar hesaplanip islem gorulecek.
-        stage.getIcons().add(new Image("file:icon.png"));// uygulamımız için ikon 
-        
+        resimCozunurlukAta();
+
         statusAnlikText = new Text("-");
         GridPane gridPane = new GridPane();
         group = new Group();
@@ -129,8 +130,8 @@ public class Main extends Application {
         ImageView imageView = new ImageView(image);
         imageView.setX(0);
         imageView.setY(0);
-        imageView.setFitHeight(797);
-        imageView.setFitWidth(1499);
+        imageView.setFitHeight(cozunurlukYukseklik);
+        imageView.setFitWidth(cozunurlukGenislik);
         imageView.setPreserveRatio(true);
 
         group.getChildren().add(imageView);
@@ -143,7 +144,8 @@ public class Main extends Application {
 
         gridPane.setVgap(23);
 
-        Scene scene = new Scene(gridPane, 1920, 1080);// fullHD olarak açılacak.
+        Scene scene = new Scene(gridPane, 1280, 720);// fullHD olarak açılacak.
+        stage.getIcons().add(new Image("file:icon.png"));// uygulamımız için ikon 
         stage.setTitle("GEZGİN KARGO PROBLEMİ");
         stage.setScene(scene);
         stage.show();
@@ -154,6 +156,8 @@ public class Main extends Application {
             public void handle(ActionEvent arg0) {
                 statusAnlikText.setText("hesaplanıyor..");
                 group.getChildren().clear();
+                imageView.setFitHeight(cozunurlukYukseklik);
+                imageView.setFitWidth(cozunurlukGenislik);
                 group.getChildren().add(imageView); // harita sifirlaniyor.
                 hesaplananMesafeText.setText("---km");//textler sifilaniyor.
                 radioButtonFlowPane.getChildren().clear();//radio butonlar temizleniyor.
@@ -194,6 +198,10 @@ public class Main extends Application {
             public void handle(ActionEvent arg0) {
                 // bu fonkisyon secilen en kisa yola gore guzergahi cizecek.
                 ImageView imageView = new ImageView(image);
+                imageView.setX(0);
+                imageView.setY(0);
+                imageView.setFitHeight(cozunurlukYukseklik);
+                imageView.setFitWidth(cozunurlukGenislik);
                 group.getChildren().clear();
                 group.getChildren().add(imageView);
 
@@ -269,8 +277,8 @@ public class Main extends Application {
         int son;
         // baslangic sehrini kırmızı daire ile boyuyoruz.
         Circle circle = new Circle();
-        circle.setCenterX(koordinatlarX.get(ninciYol).get(0));// baslangic sehrinin koordinatlari veriliyor.
-        circle.setCenterY(koordinatlarY.get(ninciYol).get(0));
+        circle.setCenterX(koordinatlarX.get(ninciYol).get(0)*oranX);// baslangic sehrinin koordinatlari veriliyor.
+        circle.setCenterY(koordinatlarY.get(ninciYol).get(0)*oranY);
         circle.setRadius(9);// çap
         circle.setFill(Color.RED);// renk
         //
@@ -299,18 +307,39 @@ public class Main extends Application {
 
         for (int i = 0; i < X.size() - 1; i++) {
 
-            okCiz(X.get(i), Y.get(i), X.get(i + 1), Y.get(i + 1)); // n.yoldaki yollar cizdiriliyor.
+            okCiz(Math.round(X.get(i) * oranX),
+                     Math.round(Y.get(i) *oranY),
+                    Math.round(X.get(i + 1) * oranX),
+                    Math.round(Y.get(i + 1) * oranY)); // n.yoldaki yollar cizdiriliyor.
 
         }
     }
 
     public static void main(String[] args) {
         launch(args);
-       
+
     }
 
     public static void setTextStatusAnlikText(String s) {
         statusAnlikText.setText(s);
+    }
+
+    private static void resimCozunurlukAta() {
+        int result = FileUtility.dosyadanCozunurluguOku();
+        // result 0 ise hd 1 ise full hd 
+        if (result == 1) { // FULLHD İSE 
+            cozunurlukGenislik = (int)FullHDWitdh;
+            cozunurlukYukseklik = (int)FullHDHeight;
+            oranX = 1;
+            oranY = 1;
+        } else {
+            cozunurlukGenislik = (int)HDWitdh;
+            cozunurlukYukseklik =(int) HDHeight;
+            oranX = HDWitdh/FullHDWitdh;
+            oranY = HDHeight / FullHDHeight;
+            
+        }
+        System.out.println(oranX);
     }
 
 }
