@@ -10,8 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -26,6 +24,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -37,7 +37,7 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    private String baslangicSehri;   
+    private String baslangicSehri;
     private static ArrayList<ArrayList<Integer>> koordinatlarX = new ArrayList<ArrayList<Integer>>();
     private static ArrayList<ArrayList<Integer>> koordinatlarY = new ArrayList<ArrayList<Integer>>();
     private static ArrayList<String> hesaplananMesafeDegerleriArrayList = new ArrayList<>();
@@ -45,10 +45,12 @@ public class Main extends Application {
     private static final double arrowLength = 7;
     private static final double arrowWidth = 7;
     private static Text statusAnlikText;
-    
 
     @Override
     public void start(Stage stage) {
+        AllPairShortestPath.floydWarshall(); // tum sehirler arasi uzakliklar hesaplanip islem gorulecek.
+        stage.getIcons().add(new Image("file:icon.png"));// uygulamımız için ikon 
+        
         statusAnlikText = new Text("-");
         GridPane gridPane = new GridPane();
         group = new Group();
@@ -71,7 +73,7 @@ public class Main extends Application {
 
         FileInputStream fileInput = null;
         try {
-             fileInput =new FileInputStream("harita.png");
+            fileInput = new FileInputStream("harita.png");
         } catch (FileNotFoundException ex) {
             System.out.println("harita.png acilamiyor lutfen dosyayi kontrol ediniz.");
         }
@@ -100,13 +102,13 @@ public class Main extends Application {
         alternetif4RadioButton.setToggleGroup(radioButtonGroup);
 
         FlowPane toplamYolFlowPane = new FlowPane(mesafeText, hesaplananMesafeText);
-        toplamYolFlowPane.setHgap(12);
+        toplamYolFlowPane.setHgap(8);
         GridPane inputveStatus = new GridPane(); // input ve durum bilgisini hizalamak icin.
         FlowPane statusFlowPane = new FlowPane();
         statusFlowPane.getChildren().add(statusText);
         statusFlowPane.getChildren().add(statusAnlikText);
 
-        statusFlowPane.setHgap(15);
+        statusFlowPane.setHgap(8);
 
         FlowPane sehilerInputFlowPane = new FlowPane();
         sehilerInputFlowPane.getChildren().add(informationText);
@@ -141,16 +143,16 @@ public class Main extends Application {
 
         gridPane.setVgap(23);
 
-        Scene scene = new Scene(gridPane, 1600, 1000);
-        stage.setTitle("Loading an image");
+        Scene scene = new Scene(gridPane, 1920, 1080);// fullHD olarak açılacak.
+        stage.setTitle("GEZGİN KARGO PROBLEMİ");
         stage.setScene(scene);
         stage.show();
-        
+
         islemButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent arg0) {
-                statusAnlikText.setText("hesaplaniyor..");
+                statusAnlikText.setText("hesaplanıyor..");
                 group.getChildren().clear();
                 group.getChildren().add(imageView); // harita sifirlaniyor.
                 hesaplananMesafeText.setText("---km");//textler sifilaniyor.
@@ -159,18 +161,16 @@ public class Main extends Application {
                 koordinatlarX.clear();
                 koordinatlarY.clear();
                 baslangicSehri = "kocaeli";
-                String baslangicSehriEklenmisString = textField1.getText() + ","
-                        + baslangicSehri;
-                baslangicSehriEklenmisString=baslangicSehriEklenmisString.trim();// inputtaki bosluklar atiliyor.                
-                String []gezilecekSehirler = baslangicSehriEklenmisString.split(",");
+                String ayrilmamisString = baslangicSehri + "," + textField1.getText();
+                ayrilmamisString = ayrilmamisString.trim();// inputtaki bosluklar atiliyor.         
+                String[] gezilecekSehirler = ayrilmamisString.split(",");
+
                 /*
                 baslangicSehri = gezilecekSehirler[0]; // girilen sehirlerden ilki baslangic sehri olarak ataniyor. 
                  */
-
                 try {
-                    KargoGraphEnKisaYollar.enKisaYollariHesapla(baslangicSehri,
-                            gezilecekSehirler, koordinatlarX, koordinatlarY,
-                            hesaplananMesafeDegerleriArrayList); // en kisa yollar hesaplaniyor.
+                    AllPairShortestPath.findShortestPaths(gezilecekSehirler, koordinatlarX, koordinatlarY,
+                            hesaplananMesafeDegerleriArrayList); // en kisa yollar hesaplandiriliyor.
                     int koordinatSize = koordinatlarX.size();
                     radioButtonFlowPane.getChildren().clear();// radio butonlarin oldugu satir silindi.  
                     radioButtonFlowPane.getChildren().add(hesaplananGuzergahlarText);
@@ -179,6 +179,7 @@ public class Main extends Application {
                     }
                     radioButtonArray[0].setSelected(true);
                     radioButtonFlowPane.getChildren().add(haritaCizdirButton);// haritayi cizmemizi saglayan buton eklendi.
+                    statusAnlikText.setText("hesaplandı");
                 } catch (Exception ex) {
                     statusAnlikText.setText("yanlis bir giris yaptiniz.");
                     System.out.println("yanlis bir giris yaptiniz.");
@@ -256,12 +257,6 @@ public class Main extends Application {
         group.getChildren().add(line);
         group.getChildren().add(arrow1);
         group.getChildren().add(arrow2);
-        /*
-        gridPane.add(group, 0, 0);
-        scene = new Scene(gridPane, 1080, 800);
-        stage.setTitle("Loading an image");
-        stage.setScene(scene);
-        stage.show();*/
 
     }
 
@@ -272,10 +267,14 @@ public class Main extends Application {
         ArrayList<Integer> otelenecekKoordinatIndex = new ArrayList<>();
         int baslangic;
         int son;
-        //System.out.println("baslangic");
-        //System.out.println(X);
-        //System.out.println(Y);
-
+        // baslangic sehrini kırmızı daire ile boyuyoruz.
+        Circle circle = new Circle();
+        circle.setCenterX(koordinatlarX.get(ninciYol).get(0));// baslangic sehrinin koordinatlari veriliyor.
+        circle.setCenterY(koordinatlarY.get(ninciYol).get(0));
+        circle.setRadius(9);// çap
+        circle.setFill(Color.RED);// renk
+        //
+        group.getChildren().add(circle);
         for (int i = 2; i < Y.size() - 1; i++) {
             baslangic = Y.get(i);
             son = Y.get(i + 1);
@@ -293,19 +292,11 @@ public class Main extends Application {
                 }
             }
         }
-        //System.out.println("otelenece:");
-        //System.out.println(otelenecekKoordinat);
-
         for (int i = 0; i < otelenecekKoordinatIndex.size(); i++) {
             Y.set(otelenecekKoordinatIndex.get(i), otelenecekKoordinat.get(i) - 15);
 
         }
-        /*System.out.println("Index");
-        System.out.println(otelenecekKoordinatIndex);
-        System.out.println("SON");
-        System.out.println(X);
-        System.out.println(Y);
-         */
+
         for (int i = 0; i < X.size() - 1; i++) {
 
             okCiz(X.get(i), Y.get(i), X.get(i + 1), Y.get(i + 1)); // n.yoldaki yollar cizdiriliyor.
@@ -315,6 +306,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+       
     }
 
     public static void setTextStatusAnlikText(String s) {

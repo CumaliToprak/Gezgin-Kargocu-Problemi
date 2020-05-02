@@ -22,9 +22,11 @@ import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
  */
 public class AllPairShortestPath {
 
+    private static ArrayList<CityNode> cityArrayList;
     final static int INF = Integer.MAX_VALUE, V = 81;
 
-    public void floydWarshall(ArrayList<CityNode> cityArrayList) {
+    public static void floydWarshall() {
+        cityArrayList = FileUtility.readFile(); // dosyadan sehireler okundu.
         long dist[][] = new long[V][V];
         int i, j, k;
 
@@ -66,7 +68,7 @@ public class AllPairShortestPath {
 
     }
 
-    int findIndex(ArrayList<CityNode> cityArrayList, String adjacentName) {
+    private static int findIndex(ArrayList<CityNode> cityArrayList, String adjacentName) {
         for (CityNode cityNode : cityArrayList) {
             if (cityNode.getName().equalsIgnoreCase(adjacentName)) {
                 return cityNode.getLicensePlate() - 1;
@@ -77,9 +79,9 @@ public class AllPairShortestPath {
     }
 
     //Bu metod bize istenilen güzergaha göre en kısa yolları bulur.
-    public void findShortestPaths(ArrayList<CityNode> cityArrayList, String[] path,
-            ArrayList<ArrayList<Integer>> koordinatlarX,
-            ArrayList<ArrayList<Integer>> koordinatlarY) throws RequiredDataNotFoundException {
+    public static void findShortestPaths(String[] path, ArrayList<ArrayList<Integer>> koordinatlarX,
+            ArrayList<ArrayList<Integer>> koordinatlarY,
+            ArrayList<String> calculatedDistance) throws RequiredDataNotFoundException {
 
         int cityNumber = path.length;
         int[] plateNumbers = new int[cityNumber - 1];
@@ -101,13 +103,22 @@ public class AllPairShortestPath {
         }
 
         TreeMap<Long, ArrayList<String>> shortestFiveRoute = new TreeMap<>();// Tree map ascending sıralama yaptığı için bunu kullandık.
+        TreeMap<Long, ArrayList<Integer>> coordinateXTree = new TreeMap<>();
+        TreeMap<Long, ArrayList<Integer>> coordinateYTree = new TreeMap<>();
         for (i = 0; i < resultSet.size(); i++) {
-            List<Integer> result = resultSet.get(i); //sıra ile tüm seçimleri deniycez.
-            int sourceCity = result.get(0);
+            List<Integer> result = resultSet.get(i); //sıra ile tüm seçimleri deniyecez.
+            int sourceCity = result.get(0);// plaka koduna gore islem yapiyoruz.
             int nextCity = result.get(1);
             int counter = 0;
             long totalDistance = 0;
             ArrayList<String> route = new ArrayList<>();
+            ArrayList<Integer> routeXInt = new ArrayList<>();// sehirlerin bir yol icin X koordinatını tutacak
+            ArrayList<Integer> routeYInt = new ArrayList<>();// sehirlerin bir yol icin Y koordinatını tutacak
+            for (int index : result) { // suanki guzergah icin sehirlerin koordinatları arrayListlere ekleniyor.
+                index -= 1;
+                routeXInt.add(cityArrayList.get(index).getX()); // sehirin X koordinati eklendi.
+                routeYInt.add(cityArrayList.get(index).getY());
+            }
 
             while (counter < cityNumber) { //tüm sehirleri sıra ile gezeriz.
                 totalDistance += cityArrayList.get(sourceCity - 1).getAdjacentList().get(nextCity - 1).getDistance();
@@ -127,18 +138,49 @@ public class AllPairShortestPath {
             if (shortestFiveRoute.size() >= 5) {
                 shortestFiveRoute.put(totalDistance, route);
                 shortestFiveRoute.remove(shortestFiveRoute.lastKey());
+                coordinateXTree.put(totalDistance, routeXInt);
+                coordinateXTree.remove(coordinateXTree.lastKey());
+                coordinateYTree.put(totalDistance, routeYInt);
+                coordinateYTree.remove(coordinateYTree.lastKey());
+
             } else {
                 shortestFiveRoute.put(totalDistance, route);
+                coordinateXTree.put(totalDistance, routeXInt);
+                coordinateYTree.put(totalDistance, routeYInt);
             }
 
         }
+        // koodinat bilgisi cekiliyor.
+        for (Map.Entry<Long, ArrayList<String>> en : shortestFiveRoute.entrySet()) {  // x koordinatları haritada cizdirilmek icin ekleniyor.             
+            ArrayList<String> val = en.getValue();
+            ArrayList<Integer> oneRouteCoordinateX = new ArrayList<>();
+            ArrayList<Integer> oneRouteCoordinateY = new ArrayList<>();
+            // bir rota icin dongu
+            for (String cityName : val) {
+                // sehirin ismiyle plaka kodunu bulduk ve city arrayListinden citynin koordinatlarına ulaştık.
+                int plateNumber = findCityPlateNumber(cityArrayList, cityName);
+                int X = cityArrayList.get(plateNumber - 1).getX();
+                int Y = cityArrayList.get(plateNumber - 1).getY();
+                oneRouteCoordinateX.add(X);
+                oneRouteCoordinateY.add(Y);
 
-        FileUtility fileUtility = new FileUtility();
-        fileUtility.writeFile(shortestFiveRoute); // en kisa yollar yaziliyor.
+            }
+            koordinatlarX.add(oneRouteCoordinateX);// hesaplanan koordinatlar arrayliste aktarılıyor.
+            koordinatlarY.add(oneRouteCoordinateY);
+
+        }// hesaplanmis mesafeler array Liste aktariliyor.
+        for (Map.Entry<Long, ArrayList<String>> en : shortestFiveRoute.entrySet()) {           
+            Long Distance = en.getKey();
+            calculatedDistance.add(Long.toString(Distance));// mesafe string e cevirliyor.
+        }
+        
+      
+        
+        FileUtility.writeFile(shortestFiveRoute); // en kisa yollar yaziliyor.
     }
 
     //Gönderdiğimiz şehirlerin plakalarını dönderir.
-    public int findCityPlateNumber(ArrayList<CityNode> cityArrayList, String city) throws RequiredDataNotFoundException {
+    private static int findCityPlateNumber(ArrayList<CityNode> cityArrayList, String city) throws RequiredDataNotFoundException {
         for (CityNode cityItem : cityArrayList) {
             if (cityItem.getName().equalsIgnoreCase(city)) {
                 return cityItem.getLicensePlate();

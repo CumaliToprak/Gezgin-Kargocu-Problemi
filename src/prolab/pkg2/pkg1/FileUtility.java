@@ -28,7 +28,7 @@ import java.util.TreeMap;
  */
 public class FileUtility {
 
-    public ArrayList<CityNode> readFile() {
+    public static ArrayList<CityNode> readFile() {
         ArrayList<CityNode> cityArrayList = new ArrayList<CityNode>();
         int i;
         //öncelikli listemize sadece city bilgilerini ekleriz. Komşuları daha sonra ekledik.
@@ -90,7 +90,7 @@ public class FileUtility {
     }
 
     //İlgili komşuya ait plaka degerini city listesinden getirir.
-    int findAdjacentIndex(String adjacentName, ArrayList<CityNode> cityArrayList) {
+    private static int findAdjacentIndex(String adjacentName, ArrayList<CityNode> cityArrayList) {
         for (CityNode city : cityArrayList) {
             if (city.getName().toLowerCase().equalsIgnoreCase(adjacentName)) {
                 return city.getLicensePlate() - 1;
@@ -99,7 +99,7 @@ public class FileUtility {
         return -1;
     }
 
-    public void writeFile(TreeMap<Long, ArrayList<String>> shortestPaths) {
+    public static void writeFile(TreeMap<Long, ArrayList<String>> shortestPaths) {
 
         String temp ="";
         for (Map.Entry<Long, ArrayList<String>> en : shortestPaths.entrySet()) {
@@ -115,7 +115,7 @@ public class FileUtility {
             System.out.println("write fonksiyonunda dosya açılırken hata oldu.");
         }
 
-        System.exit(0);
+        
     }
 
 }
