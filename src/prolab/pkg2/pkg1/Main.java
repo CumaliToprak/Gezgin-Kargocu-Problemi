@@ -1,4 +1,3 @@
-
 package prolab.pkg2.pkg1;
 
 import javafx.scene.control.TextField;
@@ -15,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,7 +44,7 @@ public class Main extends Application {
     private static int cozunurlukYukseklik;
     private static float oranX;
     private static float oranY;
-    
+
     private static Text statusAnlikText;
 
     @Override
@@ -108,6 +108,7 @@ public class Main extends Application {
         FlowPane statusFlowPane = new FlowPane();
         statusFlowPane.getChildren().add(statusText);
         statusFlowPane.getChildren().add(statusAnlikText);
+        statusFlowPane.getChildren().add(toplamYolFlowPane);
 
         statusFlowPane.setHgap(8);
 
@@ -117,8 +118,7 @@ public class Main extends Application {
         sehilerInputFlowPane.getChildren().add(islemButton);
 
         inputveStatus.add(sehilerInputFlowPane, 0, 0);
-        inputveStatus.add(statusFlowPane, 1, 0);
-        inputveStatus.add(toplamYolFlowPane, 2, 0);
+        inputveStatus.add(statusFlowPane, 1, 0);        
         inputveStatus.setHgap(50);
 
         FlowPane radioButtonFlowPane = new FlowPane();
@@ -143,8 +143,14 @@ public class Main extends Application {
         gridPane.add(radioButtonFlowPane, 0, 2);
 
         gridPane.setVgap(23);
-
-        Scene scene = new Scene(gridPane, 1280, 720);// fullHD olarak açılacak.
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(gridPane);
+        
+        GridPane mainGridPane = new GridPane(); // ScrollPane yi merkeze hizalamak için.
+        mainGridPane.add(scrollPane, 0, 0);
+        mainGridPane.setAlignment(Pos.CENTER);
+       
+        Scene scene = new Scene(mainGridPane, 1280, 720);// fullHD olarak açılacak.
         stage.getIcons().add(new Image("file:icon.png"));// uygulamımız için ikon 
         stage.setTitle("GEZGİN KARGO PROBLEMİ");
         stage.setScene(scene);
@@ -277,8 +283,8 @@ public class Main extends Application {
         int son;
         // baslangic sehrini kırmızı daire ile boyuyoruz.
         Circle circle = new Circle();
-        circle.setCenterX(koordinatlarX.get(ninciYol).get(0)*oranX);// baslangic sehrinin koordinatlari veriliyor.
-        circle.setCenterY(koordinatlarY.get(ninciYol).get(0)*oranY);
+        circle.setCenterX(koordinatlarX.get(ninciYol).get(0) * oranX);// baslangic sehrinin koordinatlari veriliyor.
+        circle.setCenterY(koordinatlarY.get(ninciYol).get(0) * oranY);
         circle.setRadius(9);// çap
         circle.setFill(Color.RED);// renk
         //
@@ -308,7 +314,7 @@ public class Main extends Application {
         for (int i = 0; i < X.size() - 1; i++) {
 
             okCiz(Math.round(X.get(i) * oranX),
-                     Math.round(Y.get(i) *oranY),
+                    Math.round(Y.get(i) * oranY),
                     Math.round(X.get(i + 1) * oranX),
                     Math.round(Y.get(i + 1) * oranY)); // n.yoldaki yollar cizdiriliyor.
 
@@ -328,18 +334,17 @@ public class Main extends Application {
         int result = FileUtility.dosyadanCozunurluguOku();
         // result 0 ise hd 1 ise full hd 
         if (result == 1) { // FULLHD İSE 
-            cozunurlukGenislik = (int)FullHDWitdh;
-            cozunurlukYukseklik = (int)FullHDHeight;
+            cozunurlukGenislik = (int) FullHDWitdh;
+            cozunurlukYukseklik = (int) FullHDHeight;
             oranX = 1;
             oranY = 1;
         } else {
-            cozunurlukGenislik = (int)HDWitdh;
-            cozunurlukYukseklik =(int) HDHeight;
-            oranX = HDWitdh/FullHDWitdh;
+            cozunurlukGenislik = (int) HDWitdh;
+            cozunurlukYukseklik = (int) HDHeight;
+            oranX = HDWitdh / FullHDWitdh;
             oranY = HDHeight / FullHDHeight;
-            
+
         }
-        System.out.println(oranX);
     }
 
 }
