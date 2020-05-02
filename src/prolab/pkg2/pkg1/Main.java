@@ -62,6 +62,8 @@ public class Main extends Application {
                 + "\nKOCAELİ HARİÇ ŞEHİRELERİ GİRİNİZ:");
         Text hesaplananGuzergahlarText = new Text("HesaplananGuzergahlar:");
         Text statusText = new Text("Durum:");
+        Text gelistiricilerText = new Text("Bu proje Berkay Efe ÖZCAN ve Cumali TOPRAK "
+                + "tarafından geliştirlmiştir.");
         Text mesafeText = new Text("Mesafe:");
         Text hesaplananMesafeText = new Text("---km");
         mesafeText.setFont(Font.font(15));
@@ -138,10 +140,11 @@ public class Main extends Application {
 
         //gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setAlignment(Pos.CENTER);
+        
         gridPane.add(group, 0, 0);
         gridPane.add(inputveStatus, 0, 1);
         gridPane.add(radioButtonFlowPane, 0, 2);
-
+        gridPane.add(gelistiricilerText, 0, 3);
         gridPane.setVgap(23);
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(gridPane);
